@@ -1,0 +1,8 @@
+.idea
+
+terraform/sensetive.json
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+terraform/terraform.tfvars
+terraform/.terraform.lock.hcl
+terraform/.terraform

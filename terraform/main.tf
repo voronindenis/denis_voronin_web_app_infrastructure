@@ -11,7 +11,7 @@ provider "selectel" {
 # This module should be applied first:
 # terraform apply -target=module.project_with_user
 module "project_with_user" {
-  source = "modulesroject_with_user"
+  source = "./modules/project_with_user"
 
   project_name      = var.project_name
   project_user_name = var.project_user_name
@@ -31,7 +31,7 @@ provider "openstack" {
 
 # Create an OpenStack Compute instance.
 module "server" {
-  source = "moduleserver_remote_root_disk"
+  source = "./modules/server_remote_root_disk"
 
   # OpenStack Instance parameters.
   keypair_name           = var.keypair_name

@@ -1,0 +1,108 @@
+- block:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: Check that the /tmp/nodesource_setup.sh exists
+      ansible.builtin.stat:
+        path: "/tmp/nodesource_setup.sh"
+      register: nodesource
+
+    - name: Download nodejs shell script
+      ansible.builtin.uri:
+        url: "https://deb.nodesource.com/setup_23.x"
+        dest: "/tmp/nodesource_setup.sh"
+      when: not nodesource.stat.exists
+
+    - name: Run nodejs shell script
+      ansible.builtin.command:
+        cmd: "bash nodesource_setup.sh"
+        chdir: "/tmp"
+
+    - name: Install the nodejs
+      ansible.builtin.apt:
+        name: nodejs
+        state: present
+
+    - name: Remove nodejs shell script
+      ansible.builtin.file:
+        path: "/tmp/nodesource_setup.sh"
+        state: absent
+
+    - name: Install Nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: latest
+        install_recommends: yes
+      notify: Start nginx
+
+    - name: Install Git
+      ansible.builtin.apt:
+        name: git
+        state: latest
+        install_recommends: yes
+
+    - name: Add user {{ front_user }}
+      ansible.builtin.user:
+        name: "{{ front_user }}"
+        groups: "{{ front_groups }}"
+        shell: /sbin/bash
+        create_home: true
+
+    - name: Add start dir
+      ansible.builtin.file:
+        path: "/home/{{ front_user }}"
+        state: directory
+        mode: "0755"
+        owner: "{{ front_user }}"
+        group: "{{ front_group }}"
+
+    - name: Add {{ front_path }} dir
+      ansible.builtin.file:
+        path: "{{ front_path }}"
+        state: directory
+        mode: "0755"
+        owner: "{{ front_user }}"
+        group: "{{ front_group }}"
+
+    - name: Clone frontend repo
+      ansible.builtin.git:
+        repo: "{{ front_repo_url }}"
+        dest: "/home/{{ front_user }}/frontend"
+        version: "{{ front_version }}"
+        force: yes
+    #         accept_hostkey: yes
+    #         key_file: /home/ansible/.ssh/id_rsa
+
+    - name: Install npm packages
+      ansible.builtin.command:
+        cmd: "npm install"
+        chdir: "/home/{{ front_user }}/frontend"
+
+    - name: Build frontend
+      ansible.builtin.command:
+        cmd: "npm run build"
+        chdir: "/home/{{ front_user }}/frontend"
+
+    - name: Add /opt/log dir
+      ansible.builtin.file:
+        path: "/opt/log"
+        state: directory
+        mode: "0777"
+        owner: "{{ front_user }}"
+        group: "{{ front_group }}"
+
+    - name: Copy frontend build
+      ansible.builtin.copy:
+        src: "/home/{{ front_user }}/frontend/dist"
+        dest: "{{ front_path }}"
+        remote_src: yes
+
+    - name: Apply Nginx template
+      ansible.builtin.template:
+        src: templates/nginx.conf.j2
+        dest: /etc/nginx/sites-available/default
+      notify: Reload nginx
+
+  become_method: sudo
+  become: true

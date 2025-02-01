@@ -46,7 +46,7 @@ resource "openstack_compute_instance_v2" "instance_1" {
   # flavor_id          = module.flavor.flavor_id
   // NOTE: [Denis Voronin] 25.12.2024 - flavor_id is shared Line fixed configurations with vCPU share of 10%;
   // https://docs.selectel.ru/en/cloud/servers/create/configurations/#shared-line
-  flavor_id          = "9011"
+  flavor_id          = "9013"
   key_pair          = var.keypair_name
   availability_zone = var.server_zone
 

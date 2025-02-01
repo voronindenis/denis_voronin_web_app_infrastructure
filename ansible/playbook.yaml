@@ -1,0 +1,5 @@
+---
+- name: Play for frontend-service start
+  hosts: frontend
+  roles:
+    - frontend

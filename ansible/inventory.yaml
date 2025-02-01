@@ -1,0 +1,7 @@
+all: # Все серверы в нашем inventory, all - обязателен
+  children: # Дочерние группы для all
+    frontend:
+      hosts:
+        frontend:
+          ansible_host: "{{ host }}"
+          ansible_user: root

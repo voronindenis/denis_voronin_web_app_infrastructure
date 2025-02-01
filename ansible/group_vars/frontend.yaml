@@ -1,0 +1,6 @@
+front_user: "www-data"
+front_groups: "www-data,sudo"
+front_group: "www-data"
+front_path: "/var/www-data"
+front_version: "main"
+front_repo_url: "https://github.com/voronindenis/denis_voronin_web_app.git"

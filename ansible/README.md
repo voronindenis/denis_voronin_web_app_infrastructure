@@ -8,7 +8,7 @@ It includes the following play's:
 
 ### frontend
 
-THis role installs the Frontend Next.js application on the server. It uses the following tasks:
+This role installs the Frontend Next.js application on the server. It uses the following tasks:
 - Install Node.js
 - Install Git
 - Install Nginx

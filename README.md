@@ -1,6 +1,7 @@
 # Denis Voronin's web application infrastructure
 
-This repository contains Terraform code to create a web application infrastructure in Selectel.
+This repository contains Terraform code to create a web application infrastructure in Selectel and 
+Ansible configuraion for deploy a web application.
 
 ## Terraform directory
 
@@ -44,3 +45,31 @@ env \
 - PASSWORD variable is your service user in Selectel password ([read more](https://docs.selectel.ru/en/terraform/quickstart/#add-service-user)).
 - ACCOUNT_ID variable is Selectel account number. You can look in [control panels](https://my.selectel.ru/?pk_vid=1e03812f18ed824a173518942178dbb8) in the upper right-hand corner.
 - xxx is a new password for the service user you are creating.
+
+## Ansible directory
+
+This directory contains the ansible configuration for deploy the Frontend Next.js application on the Selectel server.
+It includes the following play's:
+- frontend
+
+### Roles
+
+#### frontend
+
+This role installs the Frontend Next.js application on the server. It uses the following tasks:
+- Install Node.js
+- Install Git
+- Install Nginx
+- Clone the repository
+- Install dependencies
+- Build the application
+- Start the application with Nginx
+
+#### Example usage
+
+Open the `run.sh` file and replace the `host` variable with the IP address of the server you want to deploy the application to.
+Then run the following command:
+
+```sh
+sh run.sh
+```
